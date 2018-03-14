@@ -19,6 +19,7 @@ namespace BankingApp
     /// </summary>
     public partial class Banking : Window
     {
+        const decimal CHEQUE_DEDUCTION = 2.00m;
         decimal cSavingsBalance = 4346.37m;
         decimal cChequeBalance = 1386.37m;
         decimal cInvestmentBalance = 3138.78m;
@@ -86,7 +87,7 @@ namespace BankingApp
             }
             else
             // Handle insufficient fund
-                if (amountTransfer > fromBalance)
+                if (amountTransfer > (fromBalance-CHEQUE_DEDUCTION))
                 {
                     MessageBox.Show("Error! You have insufficient fund. Enter another amount");
                     Keyboard.Focus(amountTextBox);
@@ -132,8 +133,11 @@ namespace BankingApp
                             toBalanceLabel.Content = cInvestmentBalance.ToString("C");
                             break;
 
-                        case "ChequeRadioButtonOn&SavingsRadioButtonOn":  // from Cheque to Savings
-                            fromBalance = fromBalance - amountTransfer;
+
+                    //CHEQUE RADIO BUTTON INSTANCES:
+                    //--------------------------------------------------------------------
+                    case "ChequeRadioButtonOn&SavingsRadioButtonOn":  // from Cheque to Savings
+                            fromBalance = fromBalance - amountTransfer - CHEQUE_DEDUCTION;
                             cChequeBalance = fromBalance;
                             fromBalanceLabel.Content = cChequeBalance.ToString("C");
 
@@ -143,7 +147,7 @@ namespace BankingApp
                             break;
 
                         case "ChequeRadioButtonOn&InvestmentRadioButtonOn":   // from Cheque to Investment
-                            fromBalance = fromBalance - amountTransfer;
+                            fromBalance = fromBalance - amountTransfer - CHEQUE_DEDUCTION;
                             cChequeBalance = fromBalance;
                             fromBalanceLabel.Content = cChequeBalance.ToString("C");
 
@@ -151,6 +155,8 @@ namespace BankingApp
                             cInvestmentBalance = toBalance;
                             toBalanceLabel.Content = cInvestmentBalance.ToString("C");
                             break;
+
+                        //--------------------------------------------------------------------
 
                         case "InvestmentRadioButtonOn&SavingsRadioButtonOn":  // from Investment to Saving
                             fromBalance = fromBalance - amountTransfer;
